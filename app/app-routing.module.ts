@@ -11,6 +11,11 @@ const routes: Routes = [
         canActivate: [ConnectivityGuard]
     },
     {
+        path: "registration",
+        loadChildren: "./registration/registration.module#RegistrationModule",
+        canActivate: [ConnectivityGuard]
+    },
+    {
         path: "barcode",
         loadChildren: "./barcode/barcode.module#BarcodeModule",
         canActivate: [ConnectivityGuard]
@@ -30,4 +35,4 @@ const routes: Routes = [
     imports: [NativeScriptRouterModule.forRoot(routes)],
     exports: [NativeScriptRouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -5,6 +5,10 @@ import { LoginRoutingModule } from "./login-routing.module";
 import { LoginComponent } from "./login.component";
 import { NativeScriptFormsModule } from "nativescript-angular/forms"
 
+if (module['hot']) {
+    module['hot'].accept();
+  }  
+
 @NgModule({
     imports: [
         LoginRoutingModule,

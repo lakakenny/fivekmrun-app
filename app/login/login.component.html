@@ -6,6 +6,7 @@
         <Label text="Личен номер"></Label> 
         <TextField #txtUserId (returnPress)="loadProfile()" [(ngModel)]="userId" class="input-textbox" keyboardType="number" automationText="txtLoginId"></TextField>
         <Button (tap)="loadProfile()" text="Напред" class="input-button" automationText="btnLoginNext"></Button>
+        <Button [nsRouterLink]="['/registration']" text="Регистрация"></Button>
     </StackLayout>
 
     <StackLayout [@confirm]="isProfileLoaded ? 'shown' : 'hidden'" class="profile-preview m-l-20 m-r-20" 
