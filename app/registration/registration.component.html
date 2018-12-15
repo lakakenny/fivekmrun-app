@@ -1,1 +1,35 @@
-<Button text="registration works!" class="btn btn-primary"></Button>
+<ActionBar class="action-bar">
+</ActionBar>
+
+<GridLayout rows="*, auto" class="page page-content">
+    <RadDataForm [source]="userRegistration" row="0">
+        <TKEntityProperty tkDataFormProperty name="firstName" displayName="Име" index="0">
+            <TKPropertyEditor tkEntityPropertyEditor type="Text"></TKPropertyEditor>
+        </TKEntityProperty>
+        <TKEntityProperty tkDataFormProperty name="lastName" displayName="Фамилия" index="1">
+            <TKPropertyEditor tkEntityPropertyEditor type="Text"></TKPropertyEditor>
+        </TKEntityProperty>
+        <TKEntityProperty tkDataFormProperty name="email" displayName="Електронна поща" index="2">
+            <TKPropertyEditor tkEntityPropertyEditor type="Email"></TKPropertyEditor>
+        </TKEntityProperty>
+        <TKEntityProperty tkDataFormProperty name="password" displayName="Парола" index="3">
+            <TKPropertyEditor tkEntityPropertyEditor type="Password"></TKPropertyEditor>
+        </TKEntityProperty>
+        <TKEntityProperty tkDataFormProperty name="mailSubscription" displayName="Бюлетин" index="4">
+            <TKPropertyEditor tkEntityPropertyEditor type="Switch"></TKPropertyEditor>
+        </TKEntityProperty>
+        <TKEntityProperty tkDataFormProperty name="birthDate" displayName="Дата на раждане" index="5">
+            <TKPropertyEditor tkEntityPropertyEditor type="DatePicker"></TKPropertyEditor>
+        </TKEntityProperty>
+        <TKEntityProperty tkDataFormProperty name="homePark" displayName="Дом парк (град)" index="6" valuesProvider="Бургас, Варна, Пловдив, София">
+            <TKPropertyEditor tkEntityPropertyEditor type="Picker"></TKPropertyEditor>
+        </TKEntityProperty>
+        <TKEntityProperty tkDataFormProperty name="gender" displayName="Gender" index="7" valuesProvider="2D, 3D">
+            <TKPropertyEditor tkEntityPropertyEditor type="SegmentedEditor"></TKPropertyEditor>
+        </TKEntityProperty>     
+        <TKEntityProperty tkDataFormProperty name="captcha" displayName="Въведете кода от картинката" index="8">
+            <TKPropertyEditor tkEntityPropertyEditor type="Text"></TKPropertyEditor>
+        </TKEntityProperty>
+    </RadDataForm>
+    <Image src="http://5kmrun.bg/fc/freecap.php" row="1" style="vertical-align: top;"></Image>
+</GridLayout>
