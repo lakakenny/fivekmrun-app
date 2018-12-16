@@ -1,7 +1,9 @@
 <ActionBar class="action-bar">
+    <NavigationButton text="Назад" android.systemIcon="ic_menu_back" (tap)="onNavBtnTap()"></NavigationButton>
+    <Label class="action-bar-title" text="Регистрация"></Label>
 </ActionBar>
-
-<GridLayout rows="*, auto" class="page page-content">
+<ScrollView class="page page-content">
+<GridLayout rows="*, auto, auto, auto, auto">
     <RadDataForm [source]="userRegistration" row="0">
         <TKEntityProperty tkDataFormProperty name="firstName" displayName="Име" index="0">
             <TKPropertyEditor tkEntityPropertyEditor type="Text"></TKPropertyEditor>
@@ -24,12 +26,18 @@
         <TKEntityProperty tkDataFormProperty name="homePark" displayName="Дом парк (град)" index="6" valuesProvider="Бургас, Варна, Пловдив, София">
             <TKPropertyEditor tkEntityPropertyEditor type="Picker"></TKPropertyEditor>
         </TKEntityProperty>
-        <TKEntityProperty tkDataFormProperty name="gender" displayName="Gender" index="7" valuesProvider="2D, 3D">
+        <!-- <TKEntityProperty tkDataFormProperty name="gender" displayName="Gender" index="7" valuesProvider="2D, 3D">
             <TKPropertyEditor tkEntityPropertyEditor type="SegmentedEditor"></TKPropertyEditor>
-        </TKEntityProperty>     
+        </TKEntityProperty>      -->
         <TKEntityProperty tkDataFormProperty name="captcha" displayName="Въведете кода от картинката" index="8">
             <TKPropertyEditor tkEntityPropertyEditor type="Text"></TKPropertyEditor>
         </TKEntityProperty>
     </RadDataForm>
     <Image src="http://5kmrun.bg/fc/freecap.php" row="1" style="vertical-align: top;"></Image>
+    <StackLayout orientation="horizontal" row="3">
+        <Label text="Съгласен съм с условията за ползване"></Label>
+        <Switch (checkedChange)="agreementSwitch($event)"></Switch>
+    </StackLayout>
+    <Button text="Регистрация" row="4" class="input-button" [isEnabled]="buttonEnabled" (onTap)="submitRegistration()"></Button>
 </GridLayout>
+</ScrollView>
