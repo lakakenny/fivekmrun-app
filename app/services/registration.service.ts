@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { UserRegistration } from "~/models/user-registration.model";
+import * as cheerio from "cheerio";
 
 @Injectable()
 export class RegistrationService {
@@ -16,7 +17,25 @@ export class RegistrationService {
             "http://5kmrun.bg/reg_form.php",
             body
         ).subscribe(response => {
-            console.dir(response);
+                const content = response;
+
+                const options = {
+                    normalizeWhitespace: true,
+                    xmlMode: true,
+                };
+
+                const webPage = cheerio.load(content, options);
+                const rows = webPage("div .push_top");
+                
+                var test = 0;
+
+                if (rows.length > 0) {
+                    test = 1;
+                    // handle error
+                } else {
+                    test = 2;
+                    // handle success
+                }
         });
     }
 }
