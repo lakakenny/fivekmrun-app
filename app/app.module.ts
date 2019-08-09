@@ -14,7 +14,8 @@ import { HTTP_INTERCEPTORS } from "@angular/common/http";
 
 export class LoggerErrorHandler implements ErrorHandler {
     handleError(error) {
-        console.log("### ErrorHandler Error: " + error.toString());
+        console.log("### ErrorHandler Error: ");
+        console.dir(error);
         console.log("### ErrorHandler Stack: " + error.stack);
     }
 }

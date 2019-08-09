@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
+import { HttpClient } from "@angular/common/http";
 import { UserRegistration } from "~/models/user-registration.model";
 import * as cheerio from "cheerio";
 
 @Injectable()
 export class RegistrationService {
-    constructor(private http: Http) {
+    constructor(private http: HttpClient) {
     }
 
     submitRegistration(userRegistration: UserRegistration) {
@@ -15,7 +15,8 @@ export class RegistrationService {
 
         this.http.post(
             "http://5kmrun.bg/reg_form.php",
-            body
+            body,
+            { responseType: "text" }
         ).subscribe(response => {
                 const content = response;
 
@@ -31,11 +32,15 @@ export class RegistrationService {
 
                 if (rows.length > 0) {
                     test = 1;
+                    console.log("Error form: ");
+                    console.dir(rows);
                     // handle error
                 } else {
                     test = 2;
                     // handle success
                 }
+
+                console.log("test: "+ test);
         });
     }
 }
