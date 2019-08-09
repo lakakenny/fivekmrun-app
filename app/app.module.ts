@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ErrorHandler, NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
+import { NativeScriptHttpModule } from "nativescript-angular/http";
 import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -24,6 +25,7 @@ export class LoggerErrorHandler implements ErrorHandler {
     ],
     imports: [
         NativeScriptModule,
+        NativeScriptHttpModule,
         NativeScriptHttpClientModule,
         AppRoutingModule,
         NativeScriptAnimationsModule,
