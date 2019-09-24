@@ -23,33 +23,32 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        firebase.init({
-          }).then(
+        firebase.init({}).then(
             (instance) => {
-              console.log("firebase.init done");
+                console.log("firebase.init done");
             },
             (error) => {
-              console.log(`firebase.init error: ${error}`);
+                console.log(`firebase.init error: ${error}`);
             }
-          );
+        );
 
-       this._activatedUrl = "/home";
+        this._activatedUrl = "/home";
         this.currentUser$ = this.userService.getCurrentUser();
 
         this.router.events
-        .pipe(filter((event: any) => event instanceof NavigationEnd))
-        .subscribe((event: NavigationEnd) => {
-            this._activatedUrl = event.urlAfterRedirects;
-            firebase.analytics.logEvent({
-                key: "page_view",
-                parameters: [
-                    {
-                        key: "page_id",
-                        value: this._activatedUrl
-                    }
-                ]
+            .pipe(filter((event: any) => event instanceof NavigationEnd))
+            .subscribe((event: NavigationEnd) => {
+                this._activatedUrl = event.urlAfterRedirects;
+                firebase.analytics.logEvent({
+                    key: "page_view",
+                    parameters: [
+                        {
+                            key: "page_id",
+                            value: this._activatedUrl
+                        }
+                    ]
+                });
             });
-        });
 
         this.userService.userChanged.subscribe(() => {
             this.currentUser$ = this.userService.getCurrentUser();

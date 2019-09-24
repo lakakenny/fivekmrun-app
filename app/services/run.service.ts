@@ -3,52 +3,36 @@ import { Injectable } from "@angular/core";
 import * as cheerio from "cheerio";
 import { Observable } from "rxjs";
 
-import { map, share } from "rxjs/operators";
+import { map, share, switchMap, tap } from "rxjs/operators";
 import { Run, RunDetails } from "../models";
 import { UserService } from "../services";
+import { RunsQuery } from "./state";
+import { RunsStore } from "./state/runs.store";
+
+import { cacheable } from '@datorama/akita';
 
 @Injectable()
 export class RunService {
     private lastUserId: number;
     private lastRuns$: Observable<Run[]>;
 
-    constructor(private http: HttpClient, private userService: UserService) { }
+    private currentUserId: number;
+
+    constructor(
+        private http: HttpClient,
+        private userService: UserService,
+        private runsStore: RunsStore,
+        private runsQuery: RunsQuery) {
+
+        this.userService.userChanged.subscribe(() => {
+            this.runsStore.reset();
+        });
+    }
 
     getByCurrentUser(): Observable<Run[]> {
-        if (this.lastRuns$ && this.lastUserId === this.userService.currentUserId) {
-            return this.lastRuns$;
-        } else {
-            console.log("Getting runs ...");
-            this.lastUserId = this.userService.currentUserId;
-            return this.lastRuns$ = this.http.get(
-                "http://5km.5kmrun.bg/stat.php?id=" + this.userService.currentUserId,
-                { responseType: "text" })
-                .pipe(
-                    map(response => {
-                        const runs: Array<Run> = new Array<Run>();
+        this.loadRuns(this.userService.currentUserId);
 
-                        const content = response;
-
-                        const options = {
-                            normalizeWhitespace: true,
-                            xmlMode: true,
-                        };
-
-                        const webPage = cheerio.load(content, options);
-                        const rows = webPage("table tbody tr");
-
-                        rows.each((index, elem) => {
-                            const cells = elem.children.filter(c => c.type === "tag" && c.name === "td");
-                            if (cells.length === 9) {
-                                runs.push(this.extractRun(cells));
-                            }
-                        });
-
-                        return runs.sort((a, b) => (a.date < b.date) ? 1 : (a.date > b.date) ? -1 : 0);
-                    }),
-                    share()
-                );
-        }
+        return this.runsQuery.selectAll();
     }
 
     public getRunDetails(runId: string): Observable<RunDetails> {
@@ -84,6 +68,48 @@ export class RunService {
                 })
             );
     }
+
+    private loadRuns(userId: number) {
+        if (this.currentUserId !== userId || !this.runsQuery.getHasCache()) {
+            this.currentUserId = userId;
+            this.http.get(
+                "http://5km.5kmrun.bg/stat.php?id=" + userId,
+                { responseType: "text" })
+                .pipe(
+                    map((response) => this.getRunsFromResponse(response))
+                ).subscribe((runs) => {
+                    if (this.currentUserId === userId) {
+                        this.runsStore.set(runs);
+                    }
+                }, (err) => {
+                    console.log("getting runs error: " + err);
+                });
+        }
+    }
+
+    private getRunsFromResponse(response: string): Run[] {
+        const runs: Array<Run> = new Array<Run>();
+
+        const content = response;
+
+        const options = {
+            normalizeWhitespace: true,
+            xmlMode: true,
+        };
+
+        const webPage = cheerio.load(content, options);
+        const rows = webPage("table tbody tr");
+
+        rows.each((index, elem) => {
+            const cells = elem.children.filter(c => c.type === "tag" && c.name === "td");
+            if (cells.length === 9) {
+                runs.push(this.extractRun(cells));
+            }
+        });
+
+        return runs.sort((a, b) => (a.date < b.date) ? 1 : (a.date > b.date) ? -1 : 0);
+    }
+
 
     private extractRunDetails(cells: any): Run {
         const run = new Run(

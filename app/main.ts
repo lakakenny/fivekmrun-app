@@ -5,4 +5,7 @@ import { AppModule } from "./app.module";
 import * as elementRegistryModule from 'nativescript-angular/element-registry';
 elementRegistryModule.registerElement("CardView", () => require("nativescript-cardview").CardView);
 
+var isNativeScript = typeof global !== 'undefined' && typeof (<any>global).__runtimeVersion !== 'undefined';
+console.log("-----> isNativeScript", isNativeScript);
+
 platformNativeScriptDynamic().bootstrapModule(AppModule);

@@ -29,8 +29,8 @@ export class HomeComponent implements OnInit {
         const runs$ = this.runService.getByCurrentUser();
 
         this.runs$ = runs$.pipe(map(runs => runs.reverse()));
-        this.lastRun$ = runs$.pipe(map(runs => runs.reduce((a, b) => (getTime(a.date) - getTime(b.date)) > 0 ? a : b)));
-        this.bestRun$ = runs$.pipe(map(runs => runs.reduce((a, b) => a.time.localeCompare(b.time) < 0 ? a : b)));
+        this.lastRun$ = runs$.pipe(map(runs => runs.length ? runs.reduce((a, b) => (getTime(a) - getTime(b)) > 0 ? a : b) : null));
+        this.bestRun$ = runs$.pipe(map(runs => runs.length ? runs.reduce((a, b) => a.time.localeCompare(b.time) < 0 ? a : b) : null));
 
         this.initializeRatingPlugin();
     }
@@ -54,6 +54,6 @@ export class HomeComponent implements OnInit {
     }
 }
 
-function getTime(date?: Date) {
-    return date != null ? date.getTime() : 0;
+function getTime(run?: Run) {
+    return (run && run.date) ? run.date.getTime() : 0;
 }
